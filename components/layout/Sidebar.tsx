@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Home,
   FolderKanban,
@@ -12,13 +12,14 @@ import {
   Search,
   Trash2,
   X,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { useWorkspaceStore } from '@/store/workspaceStore';
-import { PageTree } from './PageTree';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { useWorkspaceStore } from "@/store/workspaceStore";
+import { PageTree } from "./PageTree";
+import { CreateWorkspaceDialog } from "../workspace/CreateWorkspaceDialog";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -36,10 +37,10 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   }, [fetchWorkspaces]);
 
   const navigation = [
-    { name: 'Home', href: '/dashboard', icon: Home },
-    { name: 'Search', href: '/search', icon: Search },
-    { name: 'Settings', href: '/settings', icon: Settings },
-    { name: 'Trash', href: '/trash', icon: Trash2 },
+    { name: "Home", href: "/dashboard", icon: Home },
+    { name: "Search", href: "/search", icon: Search },
+    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Trash", href: "/trash", icon: Trash2 },
   ];
 
   return (
@@ -55,8 +56,8 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-background transition-transform duration-200 ease-in-out md:relative md:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          "fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-background transition-transform duration-200 ease-in-out md:relative md:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
@@ -71,21 +72,25 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           {/* Workspace Selector */}
           <div className="px-3 py-2">
             <button
-              onClick={() => setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)}
+              onClick={() =>
+                setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)
+              }
               className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
             >
               <div className="flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-xs text-primary-foreground">
-                  {currentWorkspace?.icon || currentWorkspace?.name.charAt(0) || 'W'}
+                  {currentWorkspace?.icon ||
+                    currentWorkspace?.name.charAt(0) ||
+                    "W"}
                 </div>
                 <span className="truncate">
-                  {currentWorkspace?.name || 'Select Workspace'}
+                  {currentWorkspace?.name || "Select Workspace"}
                 </span>
               </div>
               <ChevronDown
                 className={cn(
-                  'h-4 w-4 transition-transform',
-                  isWorkspaceDropdownOpen && 'rotate-180'
+                  "h-4 w-4 transition-transform",
+                  isWorkspaceDropdownOpen && "rotate-180"
                 )}
               />
             </button>
@@ -101,8 +106,8 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                       setIsWorkspaceDropdownOpen(false);
                     }}
                     className={cn(
-                      'flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent',
-                      currentWorkspace?.id === workspace.id && 'bg-accent'
+                      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent",
+                      currentWorkspace?.id === workspace.id && "bg-accent"
                     )}
                   >
                     <div className="flex h-5 w-5 items-center justify-center rounded bg-primary/10 text-xs">
@@ -112,13 +117,12 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   </button>
                 ))}
                 <Separator className="my-2" />
-                <Link
-                  href="/workspace/new"
-                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>New Workspace</span>
-                </Link>
+                <CreateWorkspaceDialog>
+                  <button className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                    <Plus className="h-4 w-4" />
+                    <span>New Workspace</span>
+                  </button>
+                </CreateWorkspaceDialog>
               </div>
             )}
           </div>
@@ -135,10 +139,10 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
                       isActive
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
                     <item.icon className="h-4 w-4" />
@@ -157,7 +161,16 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   <h3 className="text-xs font-semibold uppercase text-muted-foreground">
                     Pages
                   </h3>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => {
+                      if (currentWorkspace) {
+                        window.location.href = `/page/new?workspaceId=${currentWorkspace.id}`;
+                      }
+                    }}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>

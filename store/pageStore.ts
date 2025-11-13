@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { pageApi } from '@/lib/api/page';
-import type { Page } from '@/types';
+import { create } from "zustand";
+import { pageApi } from "@/lib/api/page";
+import type { Page } from "@/types";
 
 interface PageState {
   pages: Page[];
@@ -37,7 +37,7 @@ export const usePageStore = create<PageState>((set, get) => ({
       set({ pages: response.data?.pages || [], isLoading: false });
     } catch (error: any) {
       set({
-        error: error.response?.data?.message || 'Failed to fetch pages',
+        error: error.response?.data?.message || "Failed to fetch pages",
         isLoading: false,
       });
     }
@@ -47,11 +47,21 @@ export const usePageStore = create<PageState>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       const response = await pageApi.getPage(id);
-      set({ currentPage: response.data?.page || null, isLoading: false });
+      const page = response.data?.page;
+
+      // Ensure we have the complete page data
+      if (page) {
+        console.log("Fetched page:", page); // Debug log
+        set({ currentPage: page, isLoading: false });
+      } else {
+        throw new Error("Page data is incomplete");
+      }
     } catch (error: any) {
+      console.error("Error fetching page:", error); // Debug log
       set({
-        error: error.response?.data?.message || 'Failed to fetch page',
+        error: error.response?.data?.message || "Failed to fetch page",
         isLoading: false,
+        currentPage: null,
       });
     }
   },
@@ -72,7 +82,7 @@ export const usePageStore = create<PageState>((set, get) => ({
       return newPage!;
     } catch (error: any) {
       set({
-        error: error.response?.data?.message || 'Failed to create page',
+        error: error.response?.data?.message || "Failed to create page",
         isLoading: false,
       });
       throw error;
@@ -86,10 +96,13 @@ export const usePageStore = create<PageState>((set, get) => ({
 
       set((state) => ({
         pages: state.pages.map((p) => (p.id === id ? updated! : p)),
-        currentPage: state.currentPage?.id === id ? updated! : state.currentPage,
+        currentPage:
+          state.currentPage?.id === id
+            ? { ...state.currentPage, ...updated }
+            : state.currentPage,
       }));
     } catch (error: any) {
-      set({ error: error.response?.data?.message || 'Failed to update page' });
+      set({ error: error.response?.data?.message || "Failed to update page" });
       throw error;
     }
   },
@@ -102,7 +115,7 @@ export const usePageStore = create<PageState>((set, get) => ({
         currentPage: state.currentPage?.id === id ? null : state.currentPage,
       }));
     } catch (error: any) {
-      set({ error: error.response?.data?.message || 'Failed to delete page' });
+      set({ error: error.response?.data?.message || "Failed to delete page" });
       throw error;
     }
   },
@@ -118,7 +131,9 @@ export const usePageStore = create<PageState>((set, get) => ({
         }));
       }
     } catch (error: any) {
-      set({ error: error.response?.data?.message || 'Failed to duplicate page' });
+      set({
+        error: error.response?.data?.message || "Failed to duplicate page",
+      });
       throw error;
     }
   },
